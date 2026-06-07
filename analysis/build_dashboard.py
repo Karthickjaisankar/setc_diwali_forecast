@@ -322,7 +322,7 @@ if __name__ == "__main__":
     kpis = {
         "services_2026":        forecast_row["services"],
         "passengers_2026":      forecast_row["passengers"],
-        "festival_date":        "October 20, 2026",
+        "festival_date":        "November 8, 2026",
         "top_route":            top_route.get("route", ""),
         "top_route_passengers": top_route.get("p2026", 0),
     }
@@ -346,7 +346,7 @@ if __name__ == "__main__":
         },
         "meta": {
             "generated_on":    "2026-06-07",
-            "festival_date":   "2026-10-20",
+            "festival_date":   "2026-11-08",
             "forecast_method": "OLS Linear Regression, fitted on 2021–2024 data",
             "source":          "SETC Deepavali Festival Bookings 2021–2025",
             "note":            "2025 excluded from model fitting — low occupancy (14%) indicates unconfirmed advance bookings",

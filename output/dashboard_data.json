@@ -2,7 +2,7 @@
   "kpis": {
     "services_2026": 43266,
     "passengers_2026": 323310,
-    "festival_date": "October 20, 2026",
+    "festival_date": "November 8, 2026",
     "top_route": "CHENNAI-PT Dr.M.G.R.BS \u2192 TRICHY",
     "top_route_passengers": 15560
   },
@@ -6545,7 +6545,7 @@
   },
   "meta": {
     "generated_on": "2026-06-07",
-    "festival_date": "2026-10-20",
+    "festival_date": "2026-11-08",
     "forecast_method": "OLS Linear Regression, fitted on 2021\u20132024 data",
     "source": "SETC Deepavali Festival Bookings 2021\u20132025",
     "note": "2025 excluded from model fitting \u2014 low occupancy (14%) indicates unconfirmed advance bookings"
