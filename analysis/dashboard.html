@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deepavali 2026 | SETC Demand Forecast</title>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.44.0/dist/apexcharts.min.js"></script>
+<style>
+:root {
+  --bg:       #f0f4f8;
+  --surface:  #ffffff;
+  --card:     #ffffff;
+  --border:   #dde3ec;
+  --text:     #1a2640;
+  --muted:    #64748b;
+  --orange:   #e07000;
+  --orange-l: #fff4e6;
+  --orange-b: #ffd49e;
+  --purple:   #6d28d9;
+  --green:    #15803d;
+  --red:      #b91c1c;
+  --yellow:   #b45309;
+  --blue:     #1d4ed8;
+  --shadow:   0 1px 4px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.6}
+
+/* ── HEADER ──────────────────────────────────────────────────────────── */
+.header{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:16px 32px;display:flex;justify-content:space-between;align-items:center;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+}
+.h-title{font-size:1.25rem;font-weight:700;color:var(--orange)}
+.h-sub{font-size:.76rem;color:var(--muted);margin-top:2px}
+.h-pill{
+  background:var(--orange-l);border:1px solid var(--orange-b);
+  color:var(--orange);padding:5px 14px;border-radius:20px;font-size:.76rem;font-weight:600
+}
+
+/* ── KPI STRIP ───────────────────────────────────────────────────────── */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:#fff;border-bottom:1px solid var(--border);
+}
+.kpi{padding:16px 24px;border-right:1px solid var(--border)}
+.kpi:last-child{border-right:none}
+.kpi-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.kpi-val{font-size:1.75rem;font-weight:700;margin:4px 0 2px;line-height:1}
+.kpi-val.accent{color:var(--orange)}
+.kpi-sub{font-size:.73rem;color:var(--muted)}
+
+/* ── CORP FILTER BAR ─────────────────────────────────────────────────── */
+.filter-bar{
+  background:#fff;border-bottom:2px solid var(--border);
+  padding:10px 32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.filter-bar label{font-size:.78rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.filter-bar select{
+  background:#fff;border:1px solid var(--border);color:var(--text);
+  padding:6px 12px;border-radius:6px;font-size:.83rem;cursor:pointer;
+  min-width:180px;box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.filter-bar select:focus{outline:2px solid var(--orange-b);border-color:var(--orange)}
+.filter-bar .filter-note{font-size:.72rem;color:var(--muted);margin-left:auto}
+
+/* ── TABS ────────────────────────────────────────────────────────────── */
+.tabs{
+  display:flex;background:#fff;border-bottom:1px solid var(--border);
+  padding:0 28px;gap:4px;
+}
+.tab-btn{
+  background:none;border:none;cursor:pointer;color:var(--muted);
+  font-size:.84rem;font-weight:500;padding:12px 18px;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:600}
+
+/* ── PANELS ──────────────────────────────────────────────────────────── */
+.tab-panel{display:none;padding:24px 32px}
+.tab-panel.active{display:block}
+
+/* ── CARDS ───────────────────────────────────────────────────────────── */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:20px 22px;margin-bottom:18px;
+  box-shadow:var(--shadow);
+}
+.card-title{font-size:.93rem;font-weight:600;color:var(--text);margin-bottom:2px}
+.card-sub{font-size:.74rem;color:var(--muted);margin-bottom:14px}
+
+/* ── GRIDS ───────────────────────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+
+/* ── TOGGLE ──────────────────────────────────────────────────────────── */
+.toggle-row{display:flex;gap:8px;margin-bottom:12px}
+.t-btn{
+  background:#f8fafc;border:1px solid var(--border);
+  color:var(--muted);padding:5px 13px;border-radius:6px;
+  cursor:pointer;font-size:.77rem;font-weight:500;transition:all .15s;
+}
+.t-btn.active{background:var(--orange-l);border-color:var(--orange-b);color:var(--orange);font-weight:600}
+
+/* ── NOTE ────────────────────────────────────────────────────────────── */
+.note{
+  background:var(--orange-l);border:1px solid var(--orange-b);
+  border-radius:8px;padding:10px 16px;font-size:.77rem;color:#92400e;margin-bottom:18px;
+}
+.note strong{color:var(--orange)}
+
+/* ── TABLE ───────────────────────────────────────────────────────────── */
+.tbl-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.tbl-filters select,.tbl-filters input{
+  background:#fff;border:1px solid var(--border);color:var(--text);
+  padding:6px 11px;border-radius:6px;font-size:.8rem;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.tbl-filters input{min-width:180px}
+.tbl-filters input::placeholder{color:var(--muted)}
+.tbl-filters .clr-btn{
+  background:#f1f5f9;border:1px solid var(--border);color:var(--muted);
+  padding:6px 11px;border-radius:6px;cursor:pointer;font-size:.77rem;
+}
+.tbl-wrap{max-height:360px;overflow-y:auto;border-radius:8px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+thead th{
+  background:#f8fafc;color:var(--muted);padding:9px 13px;
+  text-align:left;font-weight:600;font-size:.69rem;
+  text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;z-index:1;
+  border-bottom:1px solid var(--border);
+}
+tbody td{padding:9px 13px;border-bottom:1px solid #f1f5f9;color:var(--text)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fafcff}
+.val-hi{color:var(--orange);font-weight:600}
+.row-count{font-size:.73rem;color:var(--muted);margin-top:6px}
+
+/* ── INSIGHT CARDS ───────────────────────────────────────────────────── */
+.insight-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:4px}
+.ins-card{
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  padding:16px 18px;text-align:center;box-shadow:var(--shadow);
+}
+.ins-lbl{font-size:.69rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.ins-val{font-size:1.5rem;font-weight:700;color:var(--orange);line-height:1}
+.ins-sub{font-size:.73rem;color:var(--muted);margin-top:4px}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);background:#fff;
+  padding:12px 32px;font-size:.72rem;color:var(--muted);
+  display:flex;justify-content:space-between;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────── */
+@media(max-width:900px){
+  .kpi-strip,.g2,.g3{grid-template-columns:repeat(2,1fr)}
+  .insight-cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .kpi-strip,.g2,.g3,.insight-cards{grid-template-columns:1fr}
+  .header{flex-direction:column;gap:8px}
+  .tab-panel{padding:14px}
+}
+</style>
+</head>
+<body>
+
+<script id="raw-data" type="application/json">__DASHBOARD_DATA__</script>
+
+<!-- ── HEADER ───────────────────────────────────────────────────────── -->
+<header class="header">
+  <div>
+    <div class="h-title">🪔 Deepavali 2026 — Demand Forecast Dashboard</div>
+    <div class="h-sub">SETC Tamil Nadu &nbsp;·&nbsp; Festival window ~Oct 6 – Nov 3, 2026 &nbsp;·&nbsp; Forecast based on 2021–2025 actuals, recent years weighted higher</div>
+  </div>
+  <div class="h-pill">Forecast Year: 2026</div>
+</header>
+
+<!-- ── KPI STRIP ─────────────────────────────────────────────────────── -->
+<div class="kpi-strip">
+  <div class="kpi">
+    <div class="kpi-lbl">Expected Services</div>
+    <div class="kpi-val accent" id="kv-svc">—</div>
+    <div class="kpi-sub">Full festival window</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">Expected Passengers</div>
+    <div class="kpi-val accent" id="kv-pax">—</div>
+    <div class="kpi-sub">Full festival window</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">Festival Date</div>
+    <div class="kpi-val" style="font-size:1.2rem;padding-top:2px" id="kv-date">—</div>
+    <div class="kpi-sub">Deepavali 2026</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">Top Route (2026)</div>
+    <div class="kpi-val" style="font-size:.88rem;line-height:1.35;padding-top:3px" id="kv-route">—</div>
+    <div class="kpi-sub" id="kv-route-sub">—</div>
+  </div>
+</div>
+
+<!-- ── CORP FILTER BAR ───────────────────────────────────────────────── -->
+<div class="filter-bar">
+  <label>🏢 Corporation</label>
+  <select id="corp-filter" onchange="applyCorpFilter()">
+    <option value="">All Corporations</option>
+  </select>
+  <span class="filter-note">Filters all charts and tables across all tabs.</span>
+</div>
+
+<!-- ── TABS ─────────────────────────────────────────────────────────── -->
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="overview">Overview</button>
+  <button class="tab-btn" data-tab="demand">Demand Pattern</button>
+  <button class="tab-btn" data-tab="routes">Routes &amp; Operations</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- TAB 1: OVERVIEW                                                   -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-overview">
+
+  <div class="note">
+    <strong>How the 2026 forecast works:</strong> Based on actual data from 2021–2025.
+    Recent years are given higher weight — 2025 counts 5× more than 2021 — so the forecast reflects the latest demand trend.
+    Routes with fewer years of history are marked in the table below. All 2026 values are <strong>directional estimates</strong>.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Year-over-Year: Services &amp; Passengers (2021–2026)</div>
+    <div class="card-sub">Bars = Services (left axis) &nbsp;·&nbsp; Line = Passengers (right axis) &nbsp;·&nbsp; Orange column = 2026 forecast</div>
+    <div id="ch-yearly" style="min-height:300px"></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Bus Class Mix</div>
+      <div class="card-sub">Service distribution by bus type — 5-year total (2021–2025)</div>
+      <div id="ch-busclass" style="min-height:280px"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Occupancy Rate by Year</div>
+      <div class="card-sub">Average seat occupancy % — 2022 was the peak demand year at 47%</div>
+      <div id="ch-occ-year" style="min-height:280px"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- TAB 2: DEMAND PATTERN                                            -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-demand">
+
+  <div class="note">
+    <strong>Day-level:</strong> D-14 = 14 days before Deepavali &nbsp;|&nbsp; D-Day = Festival &nbsp;|&nbsp; D+14 = 14 days after.
+    Peaks typically at <strong>D-3, D-2, D-1</strong> (pre-festival rush) and <strong>D+1, D+2</strong> (return journeys).
+  </div>
+
+  <div class="card">
+    <div class="card-title">Daily Demand Around Deepavali — D-14 to D+14</div>
+    <div class="card-sub">Each line = one year &nbsp;·&nbsp; <strong style="color:var(--orange)">Orange dashed = 2026 forecast</strong> &nbsp;·&nbsp; Click legend to toggle years</div>
+    <div class="toggle-row">
+      <button class="t-btn active" onclick="switchDayMetric(this,'passengers')">Passengers</button>
+      <button class="t-btn" onclick="switchDayMetric(this,'services')">Services</button>
+    </div>
+    <div id="ch-daywise" style="min-height:360px"></div>
+  </div>
+
+  <div class="insight-cards" id="day-insight-cards"></div>
+
+  <div style="margin-top:18px" class="card">
+    <div class="card-title">Services by Festival Period — W-4 to W+7</div>
+    <div class="card-sub">Grouped by period across years. <strong style="color:var(--orange)">Orange = 2026 forecast</strong></div>
+    <div class="toggle-row">
+      <button class="t-btn active" onclick="switchPeriodMetric(this,'services')">Services</button>
+      <button class="t-btn" onclick="switchPeriodMetric(this,'passengers')">Passengers</button>
+    </div>
+    <div id="ch-periods" style="min-height:320px"></div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- TAB 3: ROUTES & OPERATIONS                                        -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-routes">
+
+  <div class="card">
+    <div class="card-title">Top Routes — 2026 Forecast Passengers</div>
+    <div class="card-sub" id="routes-chart-sub">Top 15 routes by expected passengers in 2026</div>
+    <div id="ch-routes" style="min-height:400px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Route Detail Table</div>
+    <div class="card-sub">Filter by From place, To place, or search by name. Corp filter (above) also applies.</div>
+    <div class="tbl-filters">
+      <select id="filter-from" onchange="filterRouteTable()">
+        <option value="">All From Places</option>
+      </select>
+      <select id="filter-to" onchange="filterRouteTable()">
+        <option value="">All To Places</option>
+      </select>
+      <input id="filter-search" type="text" placeholder="🔍 Search route…" oninput="filterRouteTable()">
+      <button class="clr-btn" onclick="clearRouteFilters()">✕ Clear</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Corp</th>
+            <th>5yr Total Pax</th>
+            <th>2024 Services</th>
+            <th>2025 Services</th>
+            <th>2026 Fcst Services</th>
+            <th>2026 Fcst Pax</th>
+            <th title="How many years of data the forecast is based on">Forecast Basis</th>
+          </tr>
+        </thead>
+        <tbody id="routes-tbody"></tbody>
+      </table>
+    </div>
+    <div class="row-count" id="route-row-count"></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Departure Time Distribution</div>
+      <div class="card-sub">Services by departure hour — 20:00–22:00 is the peak window</div>
+      <div id="ch-depart" style="min-height:280px"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Corporation-wise Services</div>
+      <div class="card-sub">2024 actual vs 2026 forecast by operating corporation</div>
+      <div id="ch-corps" style="min-height:280px"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+<footer>
+  <span>SETC Deepavali 2026 Forecast &nbsp;·&nbsp; 109,143 records (2021–2025) &nbsp;·&nbsp; Forecast: weighted trend, recent years count more</span>
+  <span>Generated: June 2026</span>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                                        -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<script>
+const DATA = JSON.parse(document.getElementById('raw-data').textContent);
+
+const YC = {
+  2021:'#94a3b8', 2022:'#3b82f6', 2023:'#16a34a',
+  2024:'#7c3aed', 2025:'#0891b2', 2026:'#e07000'
+};
+const PALETTE = ['#e07000','#7c3aed','#1d4ed8','#15803d','#b45309','#be185d','#0e7490','#dc2626','#65a30d','#9333ea'];
+
+const BASE = {
+  theme:{ mode:'light' },
+  chart:{ background:'transparent', toolbar:{ show:false }, fontFamily:'inherit' },
+  grid:{ borderColor:'#e8edf4' },
+  tooltip:{ theme:'light' },
+  dataLabels:{ enabled:false },
+};
+
+const fmt = n => (n == null || n === undefined) ? '—' : Number(n).toLocaleString('en-IN');
+
+// ── Current state ─────────────────────────────────────────────────────────────
+let yearlyChart = null, occYearChart = null, dayChart = null, periodChart = null;
+let routesChartInstance = null;
+let activeDayMetric = 'passengers', activePeriodMetric = 'services';
+let activeSrc = DATA;  // currently selected data source (full DATA or by_corp[x])
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function destroyAndClear(chart, elId) {
+  if (chart) { try { chart.destroy(); } catch(e){} }
+  document.getElementById(elId).innerHTML = '';
+  return null;
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+}
+
+// ── Corp filter ───────────────────────────────────────────────────────────────
+function initCorpFilter() {
+  const sel = document.getElementById('corp-filter');
+  DATA.corps.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.corp; opt.textContent = c.corp;
+    sel.appendChild(opt);
+  });
+}
+
+function applyCorpFilter() {
+  const corp = document.getElementById('corp-filter').value;
+  activeSrc = (corp && DATA.by_corp && DATA.by_corp[corp]) ? DATA.by_corp[corp] : DATA;
+
+  // Show banner if filtered
+  const bar = document.querySelector('.filter-bar .filter-note');
+  bar.textContent = corp
+    ? `Showing data for ${corp} across all tabs`
+    : 'Filters all charts and tables across all tabs.';
+
+  renderKPIs(corp);
+  renderYearly(activeSrc);
+  renderOccYear(activeSrc);
+  renderDaywise(activeSrc);
+  renderPeriods(activeSrc);
+  renderRoutesChart(corp);
+  filterRouteTable();
+}
+
+// ── From / To filter dropdowns ───────────────────────────────────────────────
+function initRouteFilters() {
+  const fromSel = document.getElementById('filter-from');
+  const toSel   = document.getElementById('filter-to');
+  DATA.filter_options.from_places.forEach(p => {
+    const o = document.createElement('option'); o.value = p; o.textContent = p; fromSel.appendChild(o);
+  });
+  DATA.filter_options.to_places.forEach(p => {
+    const o = document.createElement('option'); o.value = p; o.textContent = p; toSel.appendChild(o);
+  });
+}
+
+function clearRouteFilters() {
+  document.getElementById('filter-from').value   = '';
+  document.getElementById('filter-to').value     = '';
+  document.getElementById('filter-search').value = '';
+  filterRouteTable();
+}
+
+// ── KPIs ─────────────────────────────────────────────────────────────────────
+function renderKPIs(corp) {
+  if (corp && activeSrc !== DATA) {
+    const fr = activeSrc.yearly.find(r => r.year === 2026) || {};
+    const topRoute = DATA.routes.filter(r => r.all_corps && r.all_corps.includes(corp))[0] || {};
+    document.getElementById('kv-svc').textContent       = fmt(fr.services);
+    document.getElementById('kv-pax').textContent       = fmt(fr.passengers);
+    document.getElementById('kv-route').textContent     = topRoute.route || '—';
+    document.getElementById('kv-route-sub').textContent = topRoute.p2026 ? fmt(topRoute.p2026)+' expected passengers' : '—';
+  } else {
+    const k = DATA.kpis;
+    document.getElementById('kv-svc').textContent       = fmt(k.services_2026);
+    document.getElementById('kv-pax').textContent       = fmt(k.passengers_2026);
+    document.getElementById('kv-route').textContent     = k.top_route;
+    document.getElementById('kv-route-sub').textContent = fmt(k.top_route_passengers)+' expected passengers';
+  }
+  document.getElementById('kv-date').textContent = DATA.kpis.festival_date;
+}
+
+// ── CHART: Yearly ─────────────────────────────────────────────────────────────
+function renderYearly(src) {
+  yearlyChart = destroyAndClear(yearlyChart, 'ch-yearly');
+  const d = src.yearly;
+  yearlyChart = new ApexCharts(document.getElementById('ch-yearly'), {
+    ...BASE,
+    chart:{ ...BASE.chart, type:'line', height:300 },
+    series:[
+      { name:'Services',   type:'column', data:d.map(r=>r.services) },
+      { name:'Passengers', type:'line',   data:d.map(r=>r.passengers) },
+    ],
+    colors:['#7c3aed','#e07000'],
+    xaxis:{ categories:d.map(r=>String(r.year)) },
+    yaxis:[
+      { seriesName:'Services',   title:{ text:'Services' },   labels:{ formatter:v=>fmt(v) } },
+      { seriesName:'Passengers', title:{ text:'Passengers' }, opposite:true, labels:{ formatter:v=>fmt(v) } },
+    ],
+    stroke:{ width:[0,3], curve:'smooth' },
+    markers:{ size:[0,5] },
+    plotOptions:{ bar:{ columnWidth:'55%', borderRadius:4 } },
+    legend:{ position:'top' },
+    annotations:{ xaxis:[{ x:'2026', borderColor:'#e07000',
+      label:{ text:'Forecast', style:{ background:'#fff4e6', color:'#e07000', border:'1px solid #ffd49e', fontSize:'11px' } } }] },
+  });
+  yearlyChart.render();
+}
+
+// ── CHART: Bus class (static, no corp dimension) ──────────────────────────────
+function initBusClass() {
+  const bc = DATA.bus_class;
+  new ApexCharts(document.getElementById('ch-busclass'), {
+    ...BASE,
+    chart:{ ...BASE.chart, type:'donut', height:280 },
+    series: bc.map(c=>c.value),
+    labels: bc.map(c=>c.name),
+    colors: PALETTE,
+    legend:{ position:'bottom', fontSize:'12px', itemMargin:{ horizontal:4, vertical:2 } },
+    dataLabels:{ enabled:true, formatter:v=>Math.round(v)+'%', style:{ fontSize:'11px' } },
+    plotOptions:{ pie:{ donut:{ size:'58%',
+      labels:{ show:true, total:{ show:true, label:'Total Svc', color:'#1a2640',
+        formatter:w=>fmt(w.globals.seriesTotals.reduce((a,b)=>a+b,0)) } } } } },
+    tooltip:{ y:{ formatter:v=>fmt(v)+' services' } },
+  }).render();
+}
+
+// ── CHART: Occupancy by year ──────────────────────────────────────────────────
+function renderOccYear(src) {
+  occYearChart = destroyAndClear(occYearChart, 'ch-occ-year');
+  const hist = src.yearly.filter(r => !r.is_forecast && r.occupancy != null);
+  occYearChart = new ApexCharts(document.getElementById('ch-occ-year'), {
+    ...BASE,
+    chart:{ ...BASE.chart, type:'bar', height:280 },
+    series:[{ name:'Avg Occupancy %', data:hist.map(r=>r.occupancy) }],
+    xaxis:{ categories:hist.map(r=>String(r.year)) },
+    plotOptions:{ bar:{ distributed:true, borderRadius:5, columnWidth:'52%' } },
+    yaxis:{ max:65, labels:{ formatter:v=>v+'%' }, title:{ text:'Occupancy %' } },
+    legend:{ show:false },
+    dataLabels:{ enabled:true, formatter:v=>v+'%', style:{ fontSize:'12px', colors:['#1a2640'] } },
+    colors: hist.map(r => r.year === 2022 ? '#e07000' : '#a78bfa'),
+  });
+  occYearChart.render();
+}
+
+// ── CHART: Day-by-day ─────────────────────────────────────────────────────────
+function daySeriesFor(metric, dl) {
+  const px = metric === 'passengers' ? 'p' : 's';
+  return [2021,2022,2023,2024,2025,2026].map(y => ({
+    name: y===2026 ? '2026 Forecast' : String(y),
+    data: dl.map(d => d[px+y] ?? null),
+    color: YC[y],
+  }));
+}
+
+function renderDaywise(src) {
+  dayChart = destroyAndClear(dayChart, 'ch-daywise');
+  const dl = src.day_level;
+  dayChart = new ApexCharts(document.getElementById('ch-daywise'), {
+    ...BASE,
+    chart:{ ...BASE.chart, type:'line', height:360 },
+    series: daySeriesFor(activeDayMetric, dl),
+    xaxis:{ categories:dl.map(d=>d.label), tickAmount:10, labels:{ rotate:-30 } },
+    yaxis:{ title:{ text: activeDayMetric==='passengers'?'Passengers':'Services' }, labels:{ formatter:v=>fmt(v) } },
+    stroke:{ width:[2,2,2,2,3], dashArray:[0,0,0,0,6], curve:'monotoneCubic' },
+    markers:{ size:0 },
+    legend:{ position:'top' },
+    annotations:{ xaxis:[{ x:'D-Day', borderColor:'#e07000',
+      label:{ text:'🪔 Deepavali Day', position:'top',
+        style:{ background:'#fff4e6', color:'#e07000', border:'1px solid #ffd49e', fontSize:'11px' } } }] },
+  });
+  dayChart.render();
+  buildDayInsights(src.day_level);
+}
+
+function switchDayMetric(btn, metric) {
+  btn.closest('.toggle-row').querySelectorAll('.t-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeDayMetric = metric;
+  const dl = activeSrc.day_level;
+  dayChart.updateSeries(daySeriesFor(metric, dl));
+  dayChart.updateOptions({ yaxis:{ title:{ text:metric==='passengers'?'Passengers':'Services' }, labels:{ formatter:v=>fmt(v) } } });
+}
+
+function buildDayInsights(dl) {
+  const fest     = dl.find(d => d.offset === 0) || {};
+  const prePeak  = dl.filter(d=>d.offset<0).reduce((a,b)=>(b.p2026||0)>(a.p2026||0)?b:a, {});
+  const postPeak = dl.filter(d=>d.offset>0).reduce((a,b)=>(b.p2026||0)>(a.p2026||0)?b:a, {});
+  document.getElementById('day-insight-cards').innerHTML = [
+    { lbl:'Festival Day (D-Day)',                  val:fmt(fest.p2026),     sub:'Expected passengers on Deepavali' },
+    { lbl:'Peak Pre-Festival: '+(prePeak.label||''),   val:fmt(prePeak.p2026),  sub:'Busiest day before festival' },
+    { lbl:'Peak Post-Festival: '+(postPeak.label||''), val:fmt(postPeak.p2026), sub:'Busiest return day' },
+  ].map(c=>`<div class="ins-card">
+    <div class="ins-lbl">${c.lbl}</div>
+    <div class="ins-val">${c.val}</div>
+    <div class="ins-sub">${c.sub}</div>
+  </div>`).join('');
+}
+
+// ── CHART: Periods ────────────────────────────────────────────────────────────
+function periodSeriesFor(metric, periods) {
+  const px = metric==='services'?'s':'p';
+  return [2021,2022,2023,2024,2025,2026].map(y => ({
+    name: y===2026?'2026 Forecast':String(y),
+    data: periods.map(p=>p[px+y]??0),
+    color: YC[y],
+  }));
+}
+
+function renderPeriods(src) {
+  periodChart = destroyAndClear(periodChart, 'ch-periods');
+  const periods = src.periods;
+  periodChart = new ApexCharts(document.getElementById('ch-periods'), {
+    ...BASE,
+    chart:{ ...BASE.chart, type:'bar', height:320 },
+    series: periodSeriesFor(activePeriodMetric, periods),
+    xaxis:{ categories:periods.map(p=>p.label), labels:{ rotate:-30 } },
+    yaxis:{ title:{ text:activePeriodMetric==='services'?'Services':'Passengers' }, labels:{ formatter:v=>fmt(v) } },
+    plotOptions:{ bar:{ columnWidth:'85%', borderRadius:2 } },
+    legend:{ position:'top' },
+  });
+  periodChart.render();
+}
+
+function switchPeriodMetric(btn, metric) {
+  btn.closest('.toggle-row').querySelectorAll('.t-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activePeriodMetric = metric;
+  periodChart.updateSeries(periodSeriesFor(metric, activeSrc.periods));
+  periodChart.updateOptions({ yaxis:{ title:{ text:metric==='services'?'Services':'Passengers' }, labels:{ formatter:v=>fmt(v) } } });
+}
+
+// ── CHART: Routes ─────────────────────────────────────────────────────────────
+function renderRoutesChart(corpFilter) {
+  let routes = DATA.routes;
+  if (corpFilter) routes = routes.filter(r => r.all_corps && r.all_corps.includes(corpFilter));
+  const top15  = routes.slice(0, 15);
+  const labels = top15.map(r => r.route.length > 50 ? r.route.slice(0,48)+'…' : r.route);
+  const vals   = top15.map(r => r.p2026);
+  document.getElementById('routes-chart-sub').textContent = corpFilter
+    ? `Top routes operated by ${corpFilter} — 2026 forecast passengers`
+    : 'Top 15 routes by expected passengers in 2026';
+
+  routesChartInstance = destroyAndClear(routesChartInstance, 'ch-routes');
+  routesChartInstance = new ApexCharts(document.getElementById('ch-routes'), {
+    ...BASE,
+    chart:{ ...BASE.chart, type:'bar', height:Math.max(340, top15.length*32) },
+    plotOptions:{ bar:{ horizontal:true, barHeight:'65%', borderRadius:4, distributed:true } },
+    series:[{ name:'2026 Forecast Passengers', data:vals }],
+    xaxis:{ categories:labels, labels:{ formatter:v=>fmt(v) } },
+    yaxis:{ title:{ text:'2026 Forecast Passengers' } },
+    colors: PALETTE,
+    legend:{ show:false },
+    dataLabels:{ enabled:true, textAnchor:'start', offsetX:6,
+      style:{ fontSize:'11px', colors:['#1a2640'] }, formatter:v=>fmt(v) },
+  });
+  routesChartInstance.render();
+}
+
+// ── Routes table ─────────────────────────────────────────────────────────────
+function buildRoutesTable() {
+  document.getElementById('routes-tbody').innerHTML = DATA.routes.map(r => `
+    <tr data-from="${r.from_place}" data-to="${r.to_place}" data-corp="${r.all_corps ? r.all_corps.join(',') : ''}">
+      <td>${r.from_place}</td><td>${r.to_place}</td><td>${r.dominant_corp||'—'}</td>
+      <td>${fmt(r.total_5yr)}</td><td>${fmt(r.s2024??0)}</td><td>${fmt(r.s2025??0)}</td>
+      <td class="val-hi">${fmt(r.s2026)}</td><td class="val-hi">${fmt(r.p2026)}</td>
+      <td style="font-size:.75rem;color:${r.forecast_basis&&r.forecast_basis.includes('⚠')?'#b45309':'#6b7280'}">${r.forecast_basis||'—'}</td>
+    </tr>`).join('');
+  document.getElementById('route-row-count').textContent =
+    `Showing ${DATA.routes.length} of ${DATA.routes.length} routes`;
+}
+
+function filterRouteTable() {
+  const corp   = document.getElementById('corp-filter').value.toLowerCase();
+  const from   = document.getElementById('filter-from').value.toLowerCase();
+  const to     = document.getElementById('filter-to').value.toLowerCase();
+  const search = document.getElementById('filter-search').value.toLowerCase();
+  let visible = 0;
+  document.querySelectorAll('#routes-tbody tr').forEach(row => {
+    const ok = (!corp   || row.dataset.corp.toLowerCase().includes(corp))
+            && (!from   || row.dataset.from.toLowerCase() === from)
+            && (!to     || row.dataset.to.toLowerCase()   === to)
+            && (!search || row.textContent.toLowerCase().includes(search));
+    row.style.display = ok ? '' : 'none';
+    if (ok) visible++;
+  });
+  document.getElementById('route-row-count').textContent =
+    `Showing ${visible} of ${DATA.routes.length} routes`;
+}
+
+// ── CHART: Departure time (static) ───────────────────────────────────────────
+function initDeparture() {
+  const dh   = DATA.dept_hours;
+  const peak = Math.max(...dh.map(d=>d.services));
+  new ApexCharts(document.getElementById('ch-depart'), {
+    ...BASE,
+    chart:{ ...BASE.chart, type:'bar', height:280 },
+    series:[{ name:'Services', data:dh.map(d=>d.services) }],
+    xaxis:{ categories:dh.map(d=>d.label), title:{ text:'Departure Hour' } },
+    yaxis:{ title:{ text:'Services' }, labels:{ formatter:v=>fmt(v) } },
+    plotOptions:{ bar:{ columnWidth:'75%', borderRadius:3, distributed:true } },
+    colors: dh.map(d => d.services===peak ? '#e07000' : '#a78bfa'),
+    legend:{ show:false },
+    tooltip:{ y:{ formatter:v=>fmt(v)+' services' } },
+  }).render();
+}
+
+// ── CHART: Corporations (static) ─────────────────────────────────────────────
+function initCorps() {
+  const corps = DATA.corps;
+  new ApexCharts(document.getElementById('ch-corps'), {
+    ...BASE,
+    chart:{ ...BASE.chart, type:'bar', height:280 },
+    series:[
+      { name:'2024 Actual',   data:corps.map(c=>c.s2024||0) },
+      { name:'2025 Actual',   data:corps.map(c=>c.s2025||0) },
+      { name:'2026 Forecast', data:corps.map(c=>c.s2026||0) },
+    ],
+    xaxis:{ categories:corps.map(c=>c.corp), labels:{ rotate:-30 } },
+    colors:['#7c3aed','#0891b2','#e07000'],
+    plotOptions:{ bar:{ columnWidth:'68%', borderRadius:3 } },
+    legend:{ position:'top' },
+    yaxis:{ title:{ text:'Services' }, labels:{ formatter:v=>fmt(v) } },
+  }).render();
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initTabs();
+  initCorpFilter();
+  initRouteFilters();
+  renderKPIs('');
+  renderYearly(DATA);
+  initBusClass();
+  renderOccYear(DATA);
+  renderDaywise(DATA);
+  renderPeriods(DATA);
+  renderRoutesChart('');
+  buildRoutesTable();
+  filterRouteTable();
+  initDeparture();
+  initCorps();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+Metric,Value
+Deepavali 2026 Expected Date,2026-10-20
+,
+--- 2026 FORECAST (based on 2021-2024 trend) ---,
+Total Services Expected (Full Window),"32,802"
+Total Passengers Expected (Full Window),"400,325"
+Peak Travel Period,Before (-3 wk)
+,
+--- HISTORICAL REFERENCE ---,
+Year 2021 - Total Services,"11,478"
+Year 2021 - Total Passengers,"153,854"
+Year 2021 - Avg Occupancy,32.2%
+Year 2021 - Festival Date,2021-11-04
+,
+Year 2022 - Total Services,"12,958"
+Year 2022 - Total Passengers,"257,962"
+Year 2022 - Avg Occupancy,47.0%
+Year 2022 - Festival Date,2022-10-24
+,
+Year 2023 - Total Services,"22,936"
+Year 2023 - Total Passengers,"219,173"
+Year 2023 - Avg Occupancy,20.9%
+Year 2023 - Festival Date,2023-11-12
+,
+Year 2024 - Total Services,"22,707"
+Year 2024 - Total Passengers,"321,308"
+Year 2024 - Avg Occupancy,29.3%
+Year 2024 - Festival Date,2024-10-31
+,
+Year 2025 - Total Services,"39,064"
+Year 2025 - Total Passengers,"277,150"
+Year 2025 - Avg Occupancy,14.2%
+Year 2025 - Festival Date,2025-10-20
+,
+--- DATA NOTES ---,
+Dataset,SETC Deepavali Festival bookings 2021-2025
+Records,"109,143 total trip records"
+2025 Data Caveat,2025 has higher trip count but very low occupancy (14.3%) — likely partially confirmed bookings; forecast uses 2021-2024 as primary fit years
+Anomalous Records,198 records with Booked Seats > Total Seat excluded from passenger/occupancy calculations
+Forecast Method,"OLS Linear Regression (scikit-learn) per metric, fit on 2021-2024, predicting 2026"
+Period Codes,U4-U1: 4-1 weeks before Deepavali | F: Festival Day | Z1-Z7: 1-7 weeks after Deepavali
